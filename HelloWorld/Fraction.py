@@ -12,12 +12,21 @@ def gcd(m, n):
 # To do: multiplication, division, subtraction and comparison operators (< , >)
 class Fraction:
     def __init__(self, top, bottom):
-        common = gcd(top, bottom)
-        self.num = top//common
-        self.den = bottom//common
+        if (isinstance(top, int) and isinstance(bottom, int)):
+            if (top > 0 and bottom < 0 ) or (top < 0 and bottom < 0):
+                top = 0 - top
+                bottom = 0 - bottom
+            common = gcd(top, bottom)
+            self.num = top//common
+            self.den = bottom//common
+        else:
+            raise ValueError("Please make sure the parameters are integer !")
 
     def __str__(self):
         return str(self.num) + "/" + str(self.den)
+
+    def __repr__(self):
+        return "Fraction("+str(self.num)+","+str(self.den)+")"
 
     def show(self):
         print(self.num, "/", self.den)
@@ -26,7 +35,6 @@ class Fraction:
         new_num = self.num * other_fraction.den + \
                   self.den * other_fraction.num
         new_den = self.den * other_fraction.den
-        #common = gcd(new_num, new_den)
         return Fraction(new_num , new_den)
 
     def __eq__(self, other):
@@ -61,6 +69,7 @@ class Fraction:
 
     def get_num(self):
         return self.num
+
     def get_den(self):
         return self.den
 
@@ -79,5 +88,21 @@ class Fraction:
         new_den = self.den * other.num
         return Fraction(new_num, new_den)
 
-s=Fraction(2,4) > Fraction(1,2)
-print(s)
+    def __radd__(self, other):
+        return Fraction(self.num + other * self.den, self.den)
+
+    def __iadd__(self, other):
+        self.num = self.num * other.den + \
+                self.den * other.num
+        self.den = self.den * other.den
+        return self
+
+(1 + Fraction(-1, -2))
+
+x = Fraction(-1, 2)
+y = Fraction(-3, 5)
+
+x += y
+repr(x)
+
+(Fraction(1, -2) + Fraction(3, 5)).show()
