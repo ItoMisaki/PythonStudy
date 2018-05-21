@@ -6,7 +6,7 @@ url = "http://www.purepen.com/sgyy/002.htm"
 res = requests.get(url)
 res.encoding = "gb2312"
 
-txt=''
+txt = ''
 
 soup = BeautifulSoup(res.text, "html.parser")
 
