@@ -106,4 +106,4 @@ x += y
 repr(x)
 print(x)
 
-(Fraction(1, -2) + Fraction(3, 5)).show()
+(Fraction(1, -2) + Fraction(3, 0.5)).show()
