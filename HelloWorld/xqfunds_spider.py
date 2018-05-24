@@ -2,10 +2,18 @@ import requests
 from bs4 import BeautifulSoup
 import bs4
 import time
+import random
+
+def randomIP():
+    a=random.randint(1,255)
+    b=random.randint(1,255)
+    c=random.randint(1,255)
+    d=random.randint(1,255)
+    return(str(a)+'.'+str(b)+'.'+str(c)+'.'+str(d))
 
 def getHtmlText(url):
     try:
-        rs = requests.get(url, timeout=60, params={"User-Agent": "Mozilla/5.0"})
+        rs = requests.get(url, timeout=60, params={"User-Agent": "Mozilla/5.0", "X-Forwarded-For": randomIP()})
         rs.raise_for_status()
         rs.encoding = rs.apparent_encoding
         return rs.text
