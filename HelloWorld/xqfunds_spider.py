@@ -12,6 +12,7 @@ def randomIP():
     return(str(a)+'.'+str(b)+'.'+str(c)+'.'+str(d))
 
 def getHtmlText(url):
+    rs = requests.Response()
     try:
         rs = requests.get(url, timeout=60, params={"User-Agent": "Mozilla/5.0", "X-Forwarded-For": randomIP()})
         rs.raise_for_status()
@@ -23,14 +24,23 @@ def getHtmlText(url):
 
 def fillNetValList(netVallist, html):
     soup = BeautifulSoup(html, "html.parser")
-    for tr in soup.find("tbody").children:
+    for tr in soup.find_all("tbody")[0].children:
         if isinstance(tr, bs4.element.Tag):
             tds = tr('td')
-            netVallist.append([tds[0].text.strip("\n"), \
-                               tds[1].string.strip("\n"), \
-                               tds[2].string.strip("\n \r\t"), \
-                               tds[3].string.strip("\n"), \
-                               tds[4].string.strip("\n"), \
+            netVallist.append([tds[0].text.strip("\n"),
+                               tds[1].string.strip("\n"),
+                               tds[2].string.strip("\n \r\t"),
+                               tds[3].string.strip("\n"),
+                               tds[4].string.strip("\n"),
+                               tds[6].string.strip("\n")])
+    for tr in soup.find_all("tbody")[1].children:
+        if isinstance(tr, bs4.element.Tag):
+            tds = tr('td')
+            netVallist.append([tds[0].text.strip("\n"),
+                               tds[1].string.strip("\n"),
+                               tds[2].string.strip("\n \r\t"),
+                               tds[3].string.strip("\n"),
+                               tds[4].string.strip("\n"),
                                tds[6].string.strip("\n")])
 
 

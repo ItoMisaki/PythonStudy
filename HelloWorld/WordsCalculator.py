@@ -2,19 +2,25 @@ import jieba
 import requests
 from bs4 import BeautifulSoup
 
-url = "http://www.purepen.com/sgyy/002.htm"
-res = requests.get(url)
-res.encoding = "gb2312"
-
 txt = ''
 
-soup = BeautifulSoup(res.text, "html.parser")
+urlbase = "http://weixin.sogou.com"
+resbase = requests.get(urlbase)
+resbase.encoding = "utf-8"
 
-for string in soup.stripped_strings:
-    txt += string
+soupbase = BeautifulSoup(resbase.text, "html.parser")
 
-for ch in ['\r', '\n', '\t', '&', '.', '_', '+']:
+for link in soupbase.find_all('a'):
+    if str(link.get('href')).startswith("http"):
+        print(str(link.get('href')))
+        res = requests.get(link.get('href'))
+        res.encoding = "utf-8"
+        soup = BeautifulSoup(res.text, "html.parser")
+        txt += soup.get_text()
+
+for ch in ['\r', '\n', '\t', '&', '.', '_', '+', '#', '%']:
     txt = txt.replace(ch, ' ')
+
 
 words = jieba.lcut(txt)
 counts = {}
@@ -32,4 +38,4 @@ items.sort(key=lambda x: x[1], reverse=True)
 
 for i in range(min(len(items), 20)):
     word, count = items[i]
-    print("{2:<2}:  {0:<20}{1:<10}".format(word, count, i+1))
+    print("{2:<2}:  {0:{3}<10}{1:<5}".format(word, count, i+1, chr(12288)))
